@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamLatino</title>
+  <style>
+    :root {
+      --red: #e50914;
+      --black: #141414;
+      --dark: #221f1f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--black);
+      color: white;
+      overflow-x: hidden;
+    }
+    header {
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--red);
+    }
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: var(--red); }
+
+    .user-icon {
+      width: 40px;
+      height: 40px;
+      background: #666;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 70px;
+      width: 220px;
+      height: calc(100vh - 70px);
+      background: var(--dark);
+      padding: 20px;
+      z-index: 900;
+    }
+    .sidebar a {
+      display: block;
+      padding: 15px;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--red);
+      color: white;
+    }
+
+    .main-content {
+      margin-left: 240px;
+      padding: 90px 40px 40px;
+    }
+
+    .hero {
+      height: 500px;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://image.tmdb.org/t/p/original/8cdWjvZQUExUUTzyp4t1j4C7l9g.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-end;
+      padding: 60px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      margin: 30px 0 20px;
+      color: white;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 20px rgba(229, 9, 20, 0.4);
+    }
+    .card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+    .card-title {
+      padding: 12px;
+      font-size: 15px;
+      text-align: center;
+      background: #1f1f1f;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #221f1f;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .player {
+      background: black;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #666;
+      border-radius: 10px;
+    }
+
+    button {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">STREAMLATINO</div>
+    <nav>
+      <ul>
+        <li><a href="#" onclick="showSection('home')">Inicio</a></li>
+        <li><a href="#" onclick="showSection('movies')">Películas</a></li>
+        <li><a href="#" onclick="showSection('series')">Series</a></li>
+        <li><a href="#" onclick="showSection('live')">TV en Vivo</a></li>
+      </ul>
+    </nav>
+    <div class="user-icon" onclick="toggleLoginModal()">👤</div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="#" onclick="showSection('movies')" class="active">🎬 Películas</a>
+    <a href="#" onclick="showSection('series')">📺 Series</a>
+    <a href="#" onclick="showSection('live')">📡 TV en Vivo</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content" id="main-content">
+    <!-- Sección Home -->
+    <div id="home-section">
+      <div class="hero">
+        <div>
+          <h1 style="font-size: 48px; margin-bottom: 10px;">Dune: Parte Dos</h1>
+          <p style="max-width: 500px;">La épica continuación llega a StreamLatino. ¡No te la pierdas!</p>
+          <button style="margin-top: 20px; padding: 15px 30px; font-size: 18px;" onclick="playFeatured()">▶ Reproducir</button>
+        </div>
+      </div>
+
+      <h2 class="section-title">Tendencias Hoy</h2>
+      <div class="grid" id="trending-grid"></div>
+    </div>
+
+    <!-- Otras secciones se cargan dinámicamente -->
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal" id="login-modal">
+    <div class="modal-content">
+      <h2>Iniciar Sesión</h2>
+      <br>
+      <input type="email" id="email" placeholder="Correo electrónico" style="width:100%; padding:12px; margin:10px 0; background:#333; border:none; color:white; border-radius:6px;">
+      <input type="password" id="password" placeholder="Contraseña" style="width:100%; padding:12px; margin:10px 0; background:#333; border:none; color:white; border-radius:6px;">
+      <button style="width:100%; margin-top:15px;" onclick="login()">Ingresar</button>
+      <button style="width:100%; background:#555; margin-top:10px;" onclick="toggleLoginModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- MOVIE DETAIL MODAL -->
+  <div class="modal" id="detail-modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <span onclick="closeDetail()" style="float:right; font-size:30px; cursor:pointer;">&times;</span>
+      <h2 id="modal-title"></h2>
+      <div class="player" id="modal-player">
+        Reproductor de Video (Demo)
+      </div>
+      <p id="modal-overview" style="margin-top:15px; line-height:1.6;"></p>
+    </div>
+  </div>
+
+  <script>
+    // Datos de ejemplo usando TMDB (puedes reemplazar con tu API Key)
+    async function loadMovies() {
+      const grid = document.getElementById('trending-grid');
+      grid.innerHTML = '';
+      
+      const movies = [
+        {id:1, title:"Dune: Parte Dos", img:"https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9d7Z0k6Yk1zQ.jpg"},
+        {id:2, title:"Furiosa", img:"https://image.tmdb.org/t/p/w500/9xtoB7gZ8t6Q3yF6Q2z0.jpg"},
+        {id:3, title:"Deadpool & Wolverine", img:"https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t1j4C7l9g.jpg"},
+        {id:4, title:"Kingdom of the Planet of the Apes", img:"https://image.tmdb.org/t/p/w500/5z0p4u5Xz1Z3Xz.jpg"},
+        {id:5, title:"The Fall Guy", img:"https://image.tmdb.org/t/p/w500/6o0aZfZ1Z2Z3Z4Z5Z.jpg"}
+      ];
+
+      movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${movie.img}" alt="${movie.title}">
+          <div class="card-title">${movie.title}</div>
+        `;
+        card.onclick = () => showDetail(movie);
+        grid.appendChild(card);
+      });
+    }
+
+    function showDetail(movie) {
+      document.getElementById('modal-title').textContent = movie.title;
+      document.getElementById('modal-overview').textContent = "Una increíble aventura que te mantendrá al borde del asiento. Calificación: 8.9/10";
+      document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function closeDetail() {
+      document.getElementById('detail-modal').style.display = 'none';
+    }
+
+    function toggleLoginModal() {
+      const modal = document.getElementById('login-modal');
+      modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function login() {
+      alert("✅ Sesión iniciada correctamente (Demo)");
+      toggleLoginModal();
+    }
+
+    function playFeatured() {
+      alert("▶ Reproduciendo Dune: Parte Dos (Demo)");
+    }
+
+    function showSection(section) {
+      document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+      
+      if (section === 'live') {
+        document.getElementById('main-content').innerHTML = `
+          <h2 class="section-title">📡 TV en Vivo - Canales Latinos</h2>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:20px;">
+            <div style="background:#1f1f1f; padding:15px; border-radius:10px;">
+              <h3>Univision</h3>
+              <div class="player">▶ EN VIVO</div>
+            </div>
+            <div style="background:#1f1f1f; padding:15px; border-radius:10px;">
+              <h3>Telemundo</h3>
+              <div class="player">▶ EN VIVO</div>
+            </div>
+            <div style="background:#1f1f1f; padding:15px; border-radius:10px;">
+              <h3>Caracol TV</h3>
+              <div class="player">▶ EN VIVO</div>
+            </div>
+          </div>
+        `;
+      } else {
+        document.getElementById('main-content').innerHTML = `
+          <h2 class="section-title">${section === 'movies' ? '🎬 Películas' : '📺 Series'}</h2>
+          <div class="grid" id="trending-grid"></div>
+        `;
+        loadMovies();
+      }
+    }
+
+    // Cargar al inicio
+    window.onload = () => {
+      loadMovies();
+    };
+  </script>
+</body>
+</html>
